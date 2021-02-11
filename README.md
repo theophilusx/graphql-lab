@@ -1,14 +1,8 @@
 - [GraphQL Lab](#sec-1)
   - [Structure](#sec-1-1)
-- [Notes](#sec-2)
-- [Activity Log](#sec-3)
-  - [<span class="timestamp-wrapper"><span class="timestamp">&lt;2021-02-12 Fri 08:00&gt; </span></span> Setup initial repository](#sec-3-1)
-- [Tasks](#sec-4)
-  - [Setup Postgres schema and tables](#sec-4-1)
-  - [Create database test data scripts](#sec-4-2)
-  - [Define demo application](#sec-4-3)
-  - [Setup server dependencies](#sec-4-4)
-  - [Setup client dependencies](#sec-4-5)
+  - [Notes](#sec-1-2)
+  - [Activity Log](#sec-1-3)
+  - [Tasks](#sec-1-4)
 
 
 # GraphQL Lab<a id="sec-1"></a>
@@ -41,11 +35,11 @@ The `server` directory contains sub-directories for `src`, `db` and `test`. The 
 
     It is likely additional packages will be added as required.
 
-# Notes<a id="sec-2"></a>
+## Notes<a id="sec-1-2"></a>
 
-# Activity Log<a id="sec-3"></a>
+## Activity Log<a id="sec-1-3"></a>
 
-## <span class="timestamp-wrapper"><span class="timestamp">&lt;2021-02-12 Fri 08:00&gt; </span></span> Setup initial repository<a id="sec-3-1"></a>
+### <span class="timestamp-wrapper"><span class="timestamp">&lt;2021-02-12 Fri 08:00&gt; </span></span> Setup initial repository<a id="sec-1-3-1"></a>
 
 -   Create basic repository structure
 -   Add initial README
@@ -53,14 +47,14 @@ The `server` directory contains sub-directories for `src`, `db` and `test`. The 
 -   Install initial server dependencies
 -   Setup base database
 
-# Tasks<a id="sec-4"></a>
+## Tasks<a id="sec-1-4"></a>
 
-## TODO Setup Postgres schema and tables<a id="sec-4-1"></a>
+### TODO Setup Postgres schema and tables<a id="sec-1-4-1"></a>
 
-## TODO Create database test data scripts<a id="sec-4-2"></a>
+### TODO Create database test data scripts<a id="sec-1-4-2"></a>
 
-## TODO Define demo application<a id="sec-4-3"></a>
+### TODO Define demo application<a id="sec-1-4-3"></a>
 
-## TODO Setup server dependencies<a id="sec-4-4"></a>
+### TODO Setup server dependencies<a id="sec-1-4-4"></a>
 
-## TODO Setup client dependencies<a id="sec-4-5"></a>
+### TODO Setup client dependencies<a id="sec-1-4-5"></a>

@@ -51,11 +51,11 @@
 
       It is likely additional packages will be added as required.
 
-* Notes
+** Notes
 
-* Activity Log
+** Activity Log
 
-** <2021-02-12 Fri 08:00> Setup initial repository
+*** <2021-02-12 Fri 08:00> Setup initial repository
 
    - Create basic repository structure
    - Add initial README
@@ -63,13 +63,13 @@
    - Install initial server dependencies
    - Setup base database
 
-* Tasks
+** Tasks
 
-** TODO Setup Postgres schema and tables
-** TODO Create database test data scripts
-** TODO Define demo application
-** TODO Setup server dependencies
-** TODO Setup client dependencies
+*** TODO Setup Postgres schema and tables
+*** TODO Create database test data scripts
+*** TODO Define demo application
+*** TODO Setup server dependencies
+*** TODO Setup client dependencies
 
 * Footnotes
 
