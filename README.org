@@ -1,0 +1,78 @@
+#+OPTIONS: toc:2
+
+* GraphQL Lab
+
+  This is just a simple repository to record my experiments with GraphQL. To be
+  honest, there is very little to see here. Most of what is in this repository
+  are half baked ideas and mini-experiments which are mainly for testing and
+  expanding my understanding of GraphQL. This README will be essentially a type
+  of lab book with notes and results from my exploration of the GraphQL space.
+
+** Structure
+
+   The top level of the repository contains various housekeeping files (like
+   this README) and two directories, =server= and =client=. The =server=
+   directory will contain code, configuration and tests for the server
+   components, including any related back-end requirements, such as databases.
+   The =client= directory contains code, configuration and tests relating to
+   clients which will use the GraphQL server.
+
+*** Server
+
+    The =server= directory contains sub-directories for =src=, =db= and =test=.
+    The =src= directory contains all the Javascript sources for the server
+    component. The =db= directory contains the Postgres database DDL and scripts
+    to load any necessary test data. The =test= directory will contain mocha
+    based tests[fn:1].
+
+**** Database
+
+     PostgreSQL is used as the database back-end. A database called =playground=
+     has been created which the developer has full access to. A schema called
+     =graphql_lab= is used inside this database to hold all the DDL relating to
+     this repository. (the =playground= database is my general /catch-all/
+     database for small projects like this.
+
+     All the DDL and DML necessary to create the initial database are defined in
+     scripts within the =db= directory. All scripts have a numeric prefix, used
+     to control the order of execution.
+
+**** Node Dependencies
+
+     NPM is used to manage the node dependencies. Executing the following
+     commands creates the =package.json= file and installs the initial set of
+     package dependencies.
+
+      #+begin_src shell
+        npm init -y
+        npm i apollo-server dotenv graphql pg
+        npm i --save-dev chai mocha sinon
+      #+end_src
+
+      It is likely additional packages will be added as required.
+
+* Notes
+
+* Activity Log
+
+** <2021-02-12 Fri 08:00> Setup initial repository
+
+   - Create basic repository structure
+   - Add initial README
+   - Perform initial commit
+   - Install initial server dependencies
+   - Setup base database
+
+* Tasks
+
+** TODO Setup Postgres schema and tables
+** TODO Create database test data scripts
+** TODO Define demo application
+** TODO Setup server dependencies
+** TODO Setup client dependencies
+
+* Footnotes
+
+[fn:1] I am using =mocha= for testing because that is what I'm use to. However,
+=jest= is probably worth investigating for React/GrphQL type projects. Add a
+TODO for this for later.

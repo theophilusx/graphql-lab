@@ -1,0 +1,31 @@
+{
+  "name": "graphql-lab-server",
+  "version": "1.0.0",
+  "description": "Server component of GraphQL Lab",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theophilusx/graphql-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theophilusx/graphql-lab/issues"
+  },
+  "homepage": "https://github.com/theophilusx/graphql-lab#readme",
+  "dependencies": {
+    "apollo-server": "^2.20.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.5.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.0",
+    "mocha": "^8.3.0",
+    "sinon": "^9.2.4"
+  }
+}
