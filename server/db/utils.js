@@ -26,16 +26,10 @@ function valueToString(v) {
 function arrayToString(arr) {
   let s = "";
 
-  let first = true;
-  for (let v of arr) {
-    if (Array.isArray(v)) {
-      s = first ? `[${arrayToString(v)}` : `${s}, ${arrayToString(v)}`;
-    } else {
-      s = first ? `[${valueToString(v)}` : `${s}, ${valueToString(v)}`;
-    }
-    first = false;
-  }
-  return `${s}]`;
+  let strValues = arr.map((v) => {
+    return Array.isArray(v) ? arrayToString(v) : valueToString(v);
+  });
+  return `[${strValues.join(", ")}]`;
 }
 
 function termToString(term) {
@@ -47,13 +41,12 @@ function termToString(term) {
 
   let s = `${t.column} ${t.op}`;
   if (t.op === "between" || t.op === "BETWEEN") {
-    s = `${s} ${valueToString(t.value1)} and ${valueToString(t.value2)}}`;
+    s = `${s} ${valueToString(t.value1)} and ${valueToString(t.value2)}`;
   } else {
-    const v = t.value;
-    if (Array.isArray(v)) {
-      s = `${s} ${arrayToString(v)}`;
+    if (Array.isArray(t.value)) {
+      s = `${s} ${arrayToString(t.value)}`;
     } else {
-      s = `${s} ${valueToString(v)}`;
+      s = `${s} ${valueToString(t.value)}`;
     }
   }
   return s.trim();
@@ -62,11 +55,9 @@ function termToString(term) {
 function filtersToString(filters) {
   let s = "";
   for (let term of filters) {
-    if (s.startsWith("where")) {
-      s = `${s} and ${termToString(term)}`;
-    } else {
-      s = `where ${termToString(term)}`;
-    }
+    s = s.startsWith("where")
+      ? `${s} and ${termToString(term)}`
+      : `where ${termToString(term)}`;
   }
   return s;
 }
@@ -79,17 +70,11 @@ function mkFilterString(filter) {
 }
 
 function mkOrderString(sort) {
-  sort = {
-    direction: "ASC",
+  let s = {
+    direction: "asc",
     ...sort,
   };
-  let s = " ORDER BY ";
-  let first = true;
-  for (let col of sort.columns) {
-    s = first ? `${col}` : `, ${col}`;
-    first = false;
-  }
-  return `${s} ${sort.direction}`;
+  return `order by ${s.columns.join(", ")} ${s.direction}`;
 }
 
 module.exports = {

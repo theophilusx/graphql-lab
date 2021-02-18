@@ -117,6 +117,128 @@ describe("DB Util Tests", function () {
           })
         ).to.equal("where col1 in [1, 2, 3]");
       });
+      it("in op with dates", function () {
+        let d1 = DateTime.now();
+        let d2 = DateTime.now();
+        let d3 = DateTime.now();
+        return expect(
+          utils.mkFilterString({
+            column: "col1",
+            op: "in",
+            value: [d1, d2, d3],
+          })
+        ).to.equal(
+          `where col1 in ['${d1.toISO()}', '${d2.toISO()}', '${d3.toISO()}']`
+        );
+      });
+    });
+    describe("between filter", function () {
+      it("between with strings", function () {
+        return expect(
+          utils.mkFilterString({
+            column: "col1",
+            op: "between",
+            value1: "this",
+            value2: "that",
+          })
+        ).to.equal("where col1 between 'this' and 'that'");
+      });
+      it("between with numbers", function () {
+        return expect(
+          utils.mkFilterString({
+            column: "col1",
+            op: "between",
+            value1: 10,
+            value2: 50,
+          })
+        ).to.equal("where col1 between 10 and 50");
+      });
+      it("between with dates", function () {
+        let d1 = DateTime.now();
+        let d2 = DateTime.now();
+        return expect(
+          utils.mkFilterString({
+            column: "col1",
+            op: "between",
+            value1: d1,
+            value2: d2,
+          })
+        ).to.equal(`where col1 between '${d1.toISO()}' and '${d2.toISO()}'`);
+      });
+    });
+
+    describe("multiple simple filter tests", function () {
+      it("multi-filter 1", function () {
+        return expect(
+          utils.mkFilterString([
+            {
+              column: "col1",
+              value: "val1",
+            },
+            {
+              column: "col2",
+              value: "val2",
+            },
+          ])
+        ).to.equal("where col1 = 'val1' and col2 = 'val2'");
+      });
+      it("multi-filter 2", function () {
+        return expect(
+          utils.mkFilterString([
+            {
+              column: "col1",
+              op: "<",
+              value: 10,
+            },
+            {
+              column: "col2",
+              op: ">",
+              value: 20,
+            },
+          ])
+        ).to.equal("where col1 < 10 and col2 > 20");
+      });
+      it("multi-filter 3", function () {
+        return expect(
+          utils.mkFilterString([
+            {
+              column: "col1",
+              op: "between",
+              value1: 20,
+              value2: 100,
+            },
+            {
+              column: "col2",
+              op: "is null",
+            },
+          ])
+        ).to.equal("where col1 between 20 and 100 and col2 is null");
+      });
+    });
+  });
+  describe("mkOrderString tests", function () {
+    it("simple order by", function () {
+      return expect(
+        utils.mkOrderString({
+          columns: ["col1"],
+        })
+      ).to.equal("order by col1 asc");
+    });
+
+    it("simple order by dsc", function () {
+      return expect(
+        utils.mkOrderString({
+          columns: ["col1"],
+          direction: "dsc",
+        })
+      ).to.equal("order by col1 dsc");
+    });
+    it("multi-col order by", function () {
+      return expect(
+        utils.mkOrderString({
+          columns: ["col1", "col2", "col3"],
+        })
+      ).to.equal("order by col1, col2, col3 asc");
     });
   });
 });
