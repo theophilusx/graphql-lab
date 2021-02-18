@@ -53,6 +53,30 @@
 
 ** Notes
 
+*** Demo Application
+
+    A simple web based music playlist manager which will record information
+    about songs and artists, allow creation of playlists and provide a way to
+    play the songs in a playlist locally. The application should support
+
+    - Ability to play songs from different sources, including web resources like
+      Spotify, Youtube Music and Amazon Music as well as locally stored recordings.
+    - Ability to search for songs and artists across all defined sources
+    - Ability to add results from searches to database
+    - Ability to create and edit playlists
+    - Ability to rate songs/artists
+    - Track how often a song/artist is played
+    - Ability to add, update and delete artist and song records
+    - (Optional) Ability to send music to Sonos system
+
+    The following APIs will likely be required
+
+    - Spotify API
+    - Youtube Music API
+    - Amazon Music API
+    - Sonos API
+    - GStreamer or similar API for local content
+
 ** Activity Log
 
 *** <2021-02-12 Fri 08:00> Setup initial repository
@@ -65,9 +89,16 @@
 
 ** Tasks
 
-*** TODO Setup Postgres schema and tables
+*** STARTED Setup Postgres schema and tables
+    :LOGBOOK:
+- State "STARTED"    from "TODO"       [2021-02-12 Fri 09:07]
+    :END:
 *** TODO Create database test data scripts
-*** TODO Define demo application
+*** DONE Define demo application
+    CLOSED: [2021-02-12 Fri 09:06]
+    :LOGBOOK:
+- State "DONE"       from "TODO"       [2021-02-12 Fri 09:06]
+    :END:
 *** TODO Setup server dependencies
 *** TODO Setup client dependencies
 
