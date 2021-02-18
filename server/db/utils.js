@@ -43,11 +43,9 @@ function termToString(term) {
   if (t.op === "between" || t.op === "BETWEEN") {
     s = `${s} ${valueToString(t.value1)} and ${valueToString(t.value2)}`;
   } else {
-    if (Array.isArray(t.value)) {
-      s = `${s} ${arrayToString(t.value)}`;
-    } else {
-      s = `${s} ${valueToString(t.value)}`;
-    }
+    s = Array.isArray(t.value)
+      ? `${s} ${arrayToString(t.value)}`
+      : `${s} ${valueToString(t.value)}`;
   }
   return s.trim();
 }
