@@ -4,7 +4,7 @@
   "description": "Server component of GraphQL Lab",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha" 
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/theophilusx/graphql-lab#readme",
   "dependencies": {
-    "apollo-server": "^2.20.0",
+    "apollo-server": "^2.21.0",
     "dotenv": "^8.2.0",
+    "easy-postgres": "^2.0.0",
     "graphql": "^15.5.0",
+    "luxon": "^1.26.0",
     "pg": "^8.5.1"
   },
   "devDependencies": {
