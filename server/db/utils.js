@@ -75,8 +75,19 @@ function mkOrderString(sort) {
   return `order by ${s.columns.join(", ")} ${s.direction}`;
 }
 
+function setValuesString(values) {
+  let str = "";
+  let termStrings = [];
+
+  for (let [k, v] of Object.entries(values)) {
+    termStrings.push(`${k} = ${valueToString(v)}`);
+  }
+  return termStrings.join(", ");
+}
+
 module.exports = {
   termToString,
   mkFilterString,
   mkOrderString,
+  setValuesString,
 };

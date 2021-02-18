@@ -241,4 +241,39 @@ describe("DB Util Tests", function () {
       ).to.equal("order by col1, col2, col3 asc");
     });
   });
+
+  describe("setValuesString tests", function () {
+    it("single string value", function () {
+      return expect(
+        utils.setValuesString({
+          col1: "val1",
+        })
+      ).to.equal("col1 = 'val1'");
+    });
+    it("single number value", function () {
+      return expect(
+        utils.setValuesString({
+          col1: 100,
+        })
+      ).to.equal("col1 = 100");
+    });
+    it("single date value", function () {
+      let d = DateTime.now();
+      return expect(
+        utils.setValuesString({
+          col1: d,
+        })
+      ).to.equal(`col1 = '${d.toISO()}'`);
+    });
+    it("multiple set values", function () {
+      let d = DateTime.now();
+      return expect(
+        utils.setValuesString({
+          col1: "val",
+          col2: 100,
+          col3: d,
+        })
+      ).to.equal(`col1 = 'val', col2 = 100, col3 = '${d.toISO()}'`);
+    });
+  });
 });
