@@ -86,6 +86,7 @@ function setValuesString(values) {
 }
 
 module.exports = {
+  valueToString,
   termToString,
   mkFilterString,
   mkOrderString,
