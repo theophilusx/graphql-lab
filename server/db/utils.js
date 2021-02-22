@@ -85,10 +85,22 @@ function setValuesString(values) {
   return termStrings.join(", ");
 }
 
+function selectorToFilter(selector) {
+  let filter = [];
+  for (let [col, val] of Object.entries(selector)) {
+    filter.push({
+      column: col,
+      value: val,
+    });
+  }
+  return filter;
+}
+
 module.exports = {
   valueToString,
   termToString,
   mkFilterString,
   mkOrderString,
   setValuesString,
+  selectorToFilter,
 };

@@ -7,27 +7,28 @@ function create(db, table, values) {
   let placeholders = [];
   let params = [];
 
-  for (let i = 1; i <= columns.length; i++) {
-    placeholders.push(`\$${i}`);
-  }
+  let i = 1;
   for (let col of columns) {
+    placeholders.push(`\$${i}`);
     params.push(values[col]);
   }
   let stmt = `insert into ${table} (${columns.join(
     ", "
-  )}) values (${placeholders.join(", ")})`;
+  )}) values (${placeholders.join(", ")}) returning *`;
   return db.execSQL(stmt, params);
 }
 
-function read(db, table, filter, sort) {
-  let stmt = `select * from ${table}`;
+function read(db, from, columns, filter, sort) {
+  let stmt = `select ${columns ? columns.join(", ") : "*"} from ${from}`;
 
+  console.log(`CRUD filter: ${JSON.stringify(filter)}`);
   if (filter) {
     stmt = `${stmt} ${utils.mkFilterString(filter)}`;
   }
   if (sort) {
     stmt = `${stmt} ${utils.mkOrderString(sort)}`;
   }
+  console.log(`stmt: ${stmt}`);
   return db.execSQL(stmt);
 }
 
@@ -46,6 +47,7 @@ function update(db, table, values, filter) {
   if (filter) {
     stmt = `${stmt} ${utils.mkFilterString(filter)}`;
   }
+  stmt = `${stmt} returning *`;
   return db.execSQL(stmt, params);
 }
 
@@ -55,6 +57,7 @@ function del(db, table, filter) {
   if (filter) {
     stmt = `${stmt} ${utils.mkFilterString(filter)}`;
   }
+  stmt = `${stmt} returning *`;
   return db.execSQL(stmt);
 }
 
