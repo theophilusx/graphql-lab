@@ -15,8 +15,6 @@ const createArtistModel = (db) => {
     find: async (filter) => {
       let result = [];
 
-      console.log(`filter: ${JSON.stringify(filter)}`);
-
       let rs = await crud.read(db, "graphql_lab.artists", ["*"], filter);
       for (let r of rs.rows) {
         result.push(mkArtist(r));

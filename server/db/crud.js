@@ -7,29 +7,40 @@ function create(db, table, values) {
   let placeholders = [];
   let params = [];
 
-  let i = 1;
-  for (let col of columns) {
-    placeholders.push(`\$${i}`);
-    params.push(values[col]);
+  try {
+    let i = 1;
+    for (let col of columns) {
+      placeholders.push(`\$${i}`);
+      params.push(values[col]);
+      i += 1;
+    }
+    let stmt = `insert into ${table} (${columns.join(
+      ", "
+    )}) values (${placeholders.join(", ")}) returning *`;
+    return db.execSQL(stmt, params);
+  } catch (err) {
+    throw new Error(`create: ${err.message} Values ${JSON.stringify(values)}`);
   }
-  let stmt = `insert into ${table} (${columns.join(
-    ", "
-  )}) values (${placeholders.join(", ")}) returning *`;
-  return db.execSQL(stmt, params);
 }
 
 function read(db, from, columns, filter, sort) {
   let stmt = `select ${columns ? columns.join(", ") : "*"} from ${from}`;
 
-  console.log(`CRUD filter: ${JSON.stringify(filter)}`);
-  if (filter) {
-    stmt = `${stmt} ${utils.mkFilterString(filter)}`;
+  try {
+    if (filter) {
+      stmt = `${stmt} ${utils.mkFilterString(filter)}`;
+    }
+    if (sort) {
+      stmt = `${stmt} ${utils.mkOrderString(sort)}`;
+    }
+    return db.execSQL(stmt);
+  } catch (err) {
+    throw new Error(
+      `read: ${err.message} Filter: ${JSON.stringify(
+        filter
+      )} Sort: ${JSON.stringify(sort)}`
+    );
   }
-  if (sort) {
-    stmt = `${stmt} ${utils.mkOrderString(sort)}`;
-  }
-  console.log(`stmt: ${stmt}`);
-  return db.execSQL(stmt);
 }
 
 function update(db, table, values, filter) {
@@ -37,18 +48,26 @@ function update(db, table, values, filter) {
   let colList = [];
   let params = [];
 
-  let i = 1;
-  for (let col of columns) {
-    colList.push(`${col} = \$${i}`);
-    params.push(values[col]);
-    i += 1;
+  try {
+    let i = 1;
+    for (let col of columns) {
+      colList.push(`${col} = \$${i}`);
+      params.push(values[col]);
+      i += 1;
+    }
+    let stmt = `update ${table} set ${colList.join(", ")}`;
+    if (filter) {
+      stmt = `${stmt} ${utils.mkFilterString(filter)}`;
+    }
+    stmt = `${stmt} returning *`;
+    return db.execSQL(stmt, params);
+  } catch (err) {
+    throw new Error(
+      `update: ${err.message} Values: ${JSON.stringify(
+        values
+      )} Filter: ${JSON.stringify(filter)}`
+    );
   }
-  let stmt = `update ${table} set ${colList.join(", ")}`;
-  if (filter) {
-    stmt = `${stmt} ${utils.mkFilterString(filter)}`;
-  }
-  stmt = `${stmt} returning *`;
-  return db.execSQL(stmt, params);
 }
 
 function del(db, table, filter) {

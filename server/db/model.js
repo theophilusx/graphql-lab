@@ -2,15 +2,13 @@
 
 const EasyPostgres = require("easy-postgres");
 const { createArtistModel } = require("./artist");
+const { createSongModel } = require("./song");
 
 const db = new EasyPostgres();
-
-// const model = {
-//   Artist: createArtistModel(db),
-// };
 
 module.exports = {
   models: {
     Artist: createArtistModel(db),
+    Song: createSongModel(db),
   },
 };
