@@ -59,13 +59,11 @@ module.exports = {
   },
   Song: {
     artist: async (song, __, ctx) => {
-      console.log(`rsv Song: song = ${JSON.stringify(song)}`);
       let artist_id = song.artist_id;
       let rs = await ctx.models.Artist.find({
         column: "artist_id",
         value: artist_id,
       });
-      console.log(`rsv Song: Artist = ${JSON.stringify(rs)}`);
       return rs[0];
     },
   },
