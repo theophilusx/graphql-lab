@@ -67,4 +67,14 @@ module.exports = {
       return rs[0];
     },
   },
+  Artist: {
+    songs: async (artist, _, ctx) => {
+      let artist_id = artist.artist_id;
+      let rs = await ctx.models.Song.find({
+        column: "artist_id",
+        value: artist_id,
+      });
+      return rs;
+    },
+  },
 };

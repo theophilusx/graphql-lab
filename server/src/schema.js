@@ -6,6 +6,7 @@ const typeDefs = gql`
   type Artist {
     artist_id: Int!
     name: String!
+    songs: [Song]!
     created: String!
   }
   input artistInput {
