@@ -35,7 +35,7 @@ describe("CRUD tests", function () {
   });
 
   it("read record", async function () {
-    let rslt = await crud.read(db, "test.crud_tst");
+    let rslt = await crud.read(db, "test.crud_tst", "*");
     expect(rslt.rowCount).to.equal(1);
     let rec = rslt.rows[0];
     return expect(rec.crud_name).to.equal("test name");
@@ -47,11 +47,44 @@ describe("CRUD tests", function () {
       op: ">",
       value: 0,
     };
-    let rslt = await crud.read(db, "test.crud_tst", filter);
+    let rslt = await crud.read(db, "test.crud_tst", "*", filter);
     expect(rslt.rowCount).to.equal(1);
     return expect(rslt.rows[0].crud_name).to.equal("test name");
   });
 
+  it("read record with array cols", async function () {
+    let rslt = await crud.read(db, "test.crud_tst", ["*"]);
+    expect(rslt.rowCount).to.equal(1);
+    let rec = rslt.rows[0];
+    return expect(rec.crud_name).to.equal("test name");
+  });
+
+  it("read record with array cols and filter", async function () {
+    let filter = {
+      column: "crud_id",
+      op: ">",
+      value: 0,
+    };
+    let rslt = await crud.read(db, "test.crud_tst", ["*"], filter);
+    expect(rslt.rowCount).to.equal(1);
+    return expect(rslt.rows[0].crud_name).to.equal("test name");
+  });
+
+  it("read record with specific cols and filter", async function () {
+    let filter = {
+      column: "crud_id",
+      op: ">",
+      value: 0,
+    };
+    let rslt = await crud.read(
+      db,
+      "test.crud_tst",
+      ["crud_name", "crud_n"],
+      filter
+    );
+    expect(rslt.rowCount).to.equal(1);
+    return expect(rslt.rows[0].crud_name).to.equal("test name");
+  });
   it("delete record with filter", async function () {
     let filter = {
       column: "crud_name",

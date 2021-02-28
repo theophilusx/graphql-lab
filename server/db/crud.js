@@ -3,20 +3,19 @@
 const utils = require("./utils");
 
 function create(db, table, values) {
-  let columns = Object.getOwnPropertyNames(values);
   let placeholders = [];
   let params = [];
 
   try {
     let i = 1;
-    for (let col of columns) {
+    for (let v of Object.values(values)) {
       placeholders.push(`\$${i}`);
-      params.push(values[col]);
+      params.push(v);
       i += 1;
     }
-    let stmt = `insert into ${table} (${columns.join(
-      ", "
-    )}) values (${placeholders.join(", ")}) returning *`;
+    let stmt = utils.sql`insert into ${table} (${Object.keys(
+      values
+    )}) values (${placeholders})`;
     return db.execSQL(stmt, params);
   } catch (err) {
     throw new Error(`create: ${err.message} Values ${JSON.stringify(values)}`);
@@ -24,16 +23,11 @@ function create(db, table, values) {
 }
 
 function read(db, from, columns, filter, sort) {
-  let stmt = `select ${columns ? columns.join(", ") : "*"} from ${from}`;
-
   try {
-    if (filter) {
-      stmt = `${stmt} ${utils.mkFilterString(filter)}`;
-    }
-    if (sort) {
-      stmt = `${stmt} ${utils.mkOrderString(sort)}`;
-    }
-    return db.execSQL(stmt);
+    let stmt = utils.sql`select ${columns} from ${from} ${utils.filtersToStr(
+      filter
+    )} ${utils.orderToStr(sort)}`;
+    return db.execSQL(stmt.trim());
   } catch (err) {
     throw new Error(
       `read: ${err.message} Filter: ${JSON.stringify(
@@ -44,23 +38,20 @@ function read(db, from, columns, filter, sort) {
 }
 
 function update(db, table, values, filter) {
-  let columns = Object.getOwnPropertyNames(values);
   let colList = [];
   let params = [];
 
   try {
     let i = 1;
-    for (let col of columns) {
+    for (let [col, val] of Object.entries(values)) {
       colList.push(`${col} = \$${i}`);
-      params.push(values[col]);
+      params.push(val);
       i += 1;
     }
-    let stmt = `update ${table} set ${colList.join(", ")}`;
-    if (filter) {
-      stmt = `${stmt} ${utils.mkFilterString(filter)}`;
-    }
-    stmt = `${stmt} returning *`;
-    return db.execSQL(stmt, params);
+    let stmt = utils.sql`update ${table} set ${colList} ${utils.filtersToStr(
+      filter
+    )} returning *`;
+    return db.execSQL(stmt.trim(), params);
   } catch (err) {
     throw new Error(
       `update: ${err.message} Values: ${JSON.stringify(
@@ -71,13 +62,14 @@ function update(db, table, values, filter) {
 }
 
 function del(db, table, filter) {
-  let stmt = `delete from ${table}`;
-
-  if (filter) {
-    stmt = `${stmt} ${utils.mkFilterString(filter)}`;
+  try {
+    let stmt = `delete from ${table} ${utils.filtersToStr(filter)} returning *`;
+    return db.execSQL(stmt.trim());
+  } catch (err) {
+    throw new Error(
+      `delete: ${err.message} Table: ${table} Filter: ${JSON.stringify(filter)}`
+    );
   }
-  stmt = `${stmt} returning *`;
-  return db.execSQL(stmt);
 }
 
 module.exports = {
