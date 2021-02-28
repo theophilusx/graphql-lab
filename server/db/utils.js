@@ -2,7 +2,7 @@
 
 const { DateTime } = require("luxon");
 
-function valueToString(v) {
+function valueToStr(v) {
   switch (typeof v) {
     case "boolean":
       return v ? "true" : "false";
@@ -23,64 +23,58 @@ function valueToString(v) {
   }
 }
 
-function arrayToString(arr) {
+function arrayToStr(arr) {
   let s = "";
 
   let strValues = arr.map((v) => {
-    return Array.isArray(v) ? arrayToString(v) : valueToString(v);
+    return Array.isArray(v) ? arrayToStr(v) : valueToStr(v);
   });
   return `[${strValues.join(", ")}]`;
 }
 
-function termToString(term) {
+function termToStr(term) {
   const t = {
     op: "=",
-    value: undefined,
     ...term,
   };
 
   let s = `${t.column} ${t.op}`;
-  if (t.op === "between" || t.op === "BETWEEN") {
-    s = `${s} ${valueToString(t.value1)} and ${valueToString(t.value2)}`;
+  if (t.op.toLowerCase() === "between") {
+    s = `${s} ${valueToStr(t.value1)} and ${valueToStr(t.value2)}`;
   } else {
     s = Array.isArray(t.value)
-      ? `${s} ${arrayToString(t.value)}`
-      : `${s} ${valueToString(t.value)}`;
+      ? `${s} ${arrayToStr(t.value)}`
+      : `${s} ${valueToStr(t.value)}`;
   }
   return s.trim();
 }
 
-function filtersToString(filters) {
+function filtersToStr(filters) {
   let s = "";
-  for (let term of filters) {
-    s = s.startsWith("where")
-      ? `${s} and ${termToString(term)}`
-      : `where ${termToString(term)}`;
+
+  if (filters) {
+    let filterArray = Array.isArray(filters) ? filters : [filters];
+    for (let term of filterArray) {
+      s = s.startsWith("where")
+        ? `${s} and ${termToStr(term)}`
+        : `where ${termToStr(term)}`;
+    }
   }
   return s;
 }
 
-function mkFilterString(filter) {
-  if (!Array.isArray(filter)) {
-    filter = [filter];
+function orderToStr(sort) {
+  if (sort) {
+    return `order by ${sort.columns.join(", ")} ${sort.direction || "asc"}`;
   }
-  return filtersToString(filter);
+  return "";
 }
 
-function mkOrderString(sort) {
-  let s = {
-    direction: "asc",
-    ...sort,
-  };
-  return `order by ${s.columns.join(", ")} ${s.direction}`;
-}
-
-function setValuesString(values) {
-  let str = "";
+function valuesToSetStr(values) {
   let termStrings = [];
 
   for (let [k, v] of Object.entries(values)) {
-    termStrings.push(`${k} = ${valueToString(v)}`);
+    termStrings.push(`${k} = ${valueToStr(v)}`);
   }
   return termStrings.join(", ");
 }
@@ -96,11 +90,30 @@ function selectorToFilter(selector) {
   return filter;
 }
 
+function sql(strings, ...values) {
+  let str = "";
+
+  for (let i = 0; i < strings.length; i++) {
+    if (i > 0) {
+      if (typeof values[i - 1] === "object") {
+        if (Array.isArray(values[i - 1])) {
+          str = `${str}${values[i - 1].join(", ")}`;
+        }
+      } else {
+        str = `${str}${values[i - 1]}`;
+      }
+    }
+    str = `${str}${strings[i]}`;
+  }
+  return str;
+}
+
 module.exports = {
-  valueToString,
-  termToString,
-  mkFilterString,
-  mkOrderString,
-  setValuesString,
+  valueToStr,
+  termToStr,
+  filtersToStr,
+  orderToStr,
+  valuesToSetStr,
   selectorToFilter,
+  sql,
 };

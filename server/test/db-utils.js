@@ -6,10 +6,10 @@ const utils = require("../db/utils");
 const { DateTime } = require("luxon");
 
 describe("DB Util Tests", function () {
-  describe("termToString tests", function () {
+  describe("termToStr tests", function () {
     it("basic operator with string tests", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "=",
           value: "val1",
@@ -18,7 +18,7 @@ describe("DB Util Tests", function () {
     });
     it("basic operand with number", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "=",
           value: 23.5,
@@ -27,7 +27,7 @@ describe("DB Util Tests", function () {
     });
     it("basic operand with boolean", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "=",
           value: true,
@@ -37,7 +37,7 @@ describe("DB Util Tests", function () {
     it("basic operand with DateTime", function () {
       let now = DateTime.now();
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "=",
           value: now,
@@ -47,7 +47,7 @@ describe("DB Util Tests", function () {
     it("basic operand with Date", function () {
       let now = new Date();
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "=",
           value: now,
@@ -56,7 +56,7 @@ describe("DB Util Tests", function () {
     });
     it("is null test", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "is null",
         })
@@ -64,7 +64,7 @@ describe("DB Util Tests", function () {
     });
     it("is not null test", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "is not null",
         })
@@ -72,7 +72,7 @@ describe("DB Util Tests", function () {
     });
     it("in tests", function () {
       return expect(
-        utils.termToString({
+        utils.termToStr({
           column: "col1",
           op: "in",
           value: ["a", "b", "c"],
@@ -81,11 +81,11 @@ describe("DB Util Tests", function () {
     });
   });
 
-  describe("mkFilterString tests", function () {
+  describe("filtersToStr tests", function () {
     describe("Single filter", function () {
       it("simple op string", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             value: "value",
           })
@@ -93,7 +93,7 @@ describe("DB Util Tests", function () {
       });
       it("simple op number", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             value: 10,
           })
@@ -101,7 +101,7 @@ describe("DB Util Tests", function () {
       });
       it("in op with strings", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "in",
             value: ["a", "b", "c"],
@@ -110,7 +110,7 @@ describe("DB Util Tests", function () {
       });
       it("in op with numbers", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "in",
             value: [1, 2, 3],
@@ -122,7 +122,7 @@ describe("DB Util Tests", function () {
         let d2 = DateTime.now();
         let d3 = DateTime.now();
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "in",
             value: [d1, d2, d3],
@@ -135,7 +135,7 @@ describe("DB Util Tests", function () {
     describe("between filter", function () {
       it("between with strings", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "between",
             value1: "this",
@@ -145,7 +145,7 @@ describe("DB Util Tests", function () {
       });
       it("between with numbers", function () {
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "between",
             value1: 10,
@@ -157,7 +157,7 @@ describe("DB Util Tests", function () {
         let d1 = DateTime.now();
         let d2 = DateTime.now();
         return expect(
-          utils.mkFilterString({
+          utils.filtersToStr({
             column: "col1",
             op: "between",
             value1: d1,
@@ -170,7 +170,7 @@ describe("DB Util Tests", function () {
     describe("multiple simple filter tests", function () {
       it("multi-filter 1", function () {
         return expect(
-          utils.mkFilterString([
+          utils.filtersToStr([
             {
               column: "col1",
               value: "val1",
@@ -184,7 +184,7 @@ describe("DB Util Tests", function () {
       });
       it("multi-filter 2", function () {
         return expect(
-          utils.mkFilterString([
+          utils.filtersToStr([
             {
               column: "col1",
               op: "<",
@@ -200,7 +200,7 @@ describe("DB Util Tests", function () {
       });
       it("multi-filter 3", function () {
         return expect(
-          utils.mkFilterString([
+          utils.filtersToStr([
             {
               column: "col1",
               op: "between",
@@ -216,10 +216,10 @@ describe("DB Util Tests", function () {
       });
     });
   });
-  describe("mkOrderString tests", function () {
+  describe("orderToStr tests", function () {
     it("simple order by", function () {
       return expect(
-        utils.mkOrderString({
+        utils.orderToStr({
           columns: ["col1"],
         })
       ).to.equal("order by col1 asc");
@@ -227,7 +227,7 @@ describe("DB Util Tests", function () {
 
     it("simple order by dsc", function () {
       return expect(
-        utils.mkOrderString({
+        utils.orderToStr({
           columns: ["col1"],
           direction: "dsc",
         })
@@ -235,24 +235,24 @@ describe("DB Util Tests", function () {
     });
     it("multi-col order by", function () {
       return expect(
-        utils.mkOrderString({
+        utils.orderToStr({
           columns: ["col1", "col2", "col3"],
         })
       ).to.equal("order by col1, col2, col3 asc");
     });
   });
 
-  describe("setValuesString tests", function () {
+  describe("valuesToSetStr tests", function () {
     it("single string value", function () {
       return expect(
-        utils.setValuesString({
+        utils.valuesToSetStr({
           col1: "val1",
         })
       ).to.equal("col1 = 'val1'");
     });
     it("single number value", function () {
       return expect(
-        utils.setValuesString({
+        utils.valuesToSetStr({
           col1: 100,
         })
       ).to.equal("col1 = 100");
@@ -260,7 +260,7 @@ describe("DB Util Tests", function () {
     it("single date value", function () {
       let d = DateTime.now();
       return expect(
-        utils.setValuesString({
+        utils.valuesToSetStr({
           col1: d,
         })
       ).to.equal(`col1 = '${d.toISO()}'`);
@@ -268,12 +268,27 @@ describe("DB Util Tests", function () {
     it("multiple set values", function () {
       let d = DateTime.now();
       return expect(
-        utils.setValuesString({
+        utils.valuesToSetStr({
           col1: "val",
           col2: 100,
           col3: d,
         })
       ).to.equal(`col1 = 'val', col2 = 100, col3 = '${d.toISO()}'`);
+    });
+  });
+
+  describe("tagged literal tests", function () {
+    describe("insert tests", function () {
+      it("basic insert", function () {
+        let table = "my_table";
+        let columns = ["a", "b", "c"];
+        let placeholders = ["$1", "$2", "$3"];
+
+        let s = utils.sql`insert into ${table} (${columns}) values (${placeholders})`;
+        return expect(s).to.equal(
+          "insert into my_table (a, b, c) values ($1, $2, $3)"
+        );
+      });
     });
   });
 });
